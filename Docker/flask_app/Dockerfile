@@ -1,14 +1,12 @@
-FROM ubuntu:20.04
+FROM alpine:3.15
 
 RUN mkdir /flask_app
 COPY . /flask_app/
 WORKDIR /flask_app
 
-RUN apt-get update && apt-get upgrade -y \
-    apt install -y python3.8 \
-    apt install -y python3-pip \
-    pip3 install -r requirements.txt
+RUN apk add --update python3 py3-pip \
+    && pip3 install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ./app.py
+CMD ["./app.py"]
