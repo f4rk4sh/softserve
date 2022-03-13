@@ -9,6 +9,7 @@ User = get_user_model()
 class RegularSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ['username', 'email']
 
     @transaction.atomic
     def save(self):
@@ -22,6 +23,7 @@ class RegularSignUpForm(UserCreationForm):
 class ModeratorSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ['username', 'email']
 
     @transaction.atomic
     def save(self):
