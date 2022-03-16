@@ -1,16 +1,13 @@
-.movies-list:link,
-.movies-list:visited,
-.movies-list:active {
+.book-list:link,
+.book-list:visited,
+.book-list:active {
     text-decoration: none;
     color: black;
 }
 
-.movies-list:hover {
+.book-list:hover {
     text-decoration: none;
     color: dimgray;
 }
 
-.participants {
-    width: 100%;
-}
 

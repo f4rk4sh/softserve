@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    | Books
+{% endblock %}
+
+{% block content %}
+{% for book in books %}
+    <div class="col-md-3">
+        <a href="{% url 'books:book_detail' pk=book.id %}" class="book-list">
+            <img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}">
+            <div class="card-body">
+                <h4>{{ book }}</h4>
+                {% for author in book.author.all %}
+                    <p>Author: {{ author }}</p>
+                {% endfor %}
+                {% for genre in book.genre.all %}
+                    <span class="badge bg-dark text-light">{{ genre }}</span>
+                {% endfor %}
+            </div>
+        </a>
+    </div>
+{% endfor %}
+
+{% endblock %}
