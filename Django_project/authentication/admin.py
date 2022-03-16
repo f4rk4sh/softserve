@@ -1,12 +1,7 @@
 from django.contrib import admin
-from authentication.models import Regular, Moderator
+from authentication.models import User
 
 
-@admin.register(Regular)
-class RegularAdmin(admin.ModelAdmin):
-    list_display = ['user']
-
-
-@admin.register(Moderator)
-class ModeratorAdmin(admin.ModelAdmin):
-    list_display = ['user']
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'role']
