@@ -19,9 +19,9 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['author', 'book', 'timestamp']
+    list_display = ['author', 'book', 'creator', 'timestamp', 'topic', 'review']
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['author', 'book', 'review', 'timestamp']
+    list_display = ['author', 'book', 'timestamp', 'comment', 'parent']

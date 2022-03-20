@@ -2,17 +2,17 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    | Edit book
+    | Add review
 {% endblock title %}
 
 {% block content %}
     <div class="col-md-4">
-        <h4>Edit book</h4>
-        <form method="post" enctype="multipart/form-data">
+        <h4>Add review</h4>
+        <form method="post">
             {% csrf_token %}
             {{ form|crispy }} <br>
             <div class="form-group">
-                <button type="submit" class="btn btn-dark">Confirm</button>
+                <button type="submit" class="btn btn-dark">Add review</button>
                 <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
             </div>
         </form>

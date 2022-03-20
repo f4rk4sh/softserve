@@ -1,4 +1,20 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    | Add author
+{% endblock title %}
 
 {% block content %}
+    <div class="col-md-4">
+        <h4>Add author</h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }} <br>
+            <div class="form-group">
+                <button type="submit" class="btn btn-dark">Add author</button>
+                <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
+            </div>
+        </form>
+    </div>
 {% endblock %}

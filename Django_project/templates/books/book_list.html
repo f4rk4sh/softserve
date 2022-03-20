@@ -11,15 +11,32 @@
             <img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}">
             <div class="card-body">
                 <h4>{{ book }}</h4>
-                {% for author in book.author.all %}
-                    <p>Author: {{ author }}</p>
-                {% endfor %}
-                {% for genre in book.genre.all %}
+                <p>{% for genre in book.genre.all %}
                     <span class="badge bg-dark text-light">{{ genre }}</span>
-                {% endfor %}
+                {% endfor %}</p>
+                <p><b>Author:</b>
+                    {% for author in book.author.all %}
+                        {{ author }}
+                    {% endfor %}</p>
             </div>
         </a>
     </div>
 {% endfor %}
+    <div class="pagination">
+        <span class="badge text-dark">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" role="button" class="btn btn-dark">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" role="button" class="btn btn-dark">previous</a>
+            {% endif %}
 
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" role="button" class="btn btn-dark">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" role="button" class="btn btn-dark">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 {% endblock %}

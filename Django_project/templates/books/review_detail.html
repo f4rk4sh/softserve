@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    | Review details
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="card-body">
+            <h4>Review</h4>
+            <p><b>Added by:</b> {{ review.author }}</p>
+            <p><b>Published on:</b> {{ review.timestamp }}</p>
+            <p><b>Author:</b> {{ review.creator }}</p>
+            <p><b>Topic:</b> {{ review }}</p>
+            <p><b>Text:</b><br>"{{ review.review }}"</p>
+            <a href="{% url 'books:review_update' pk=review.id %}" role="button" class="btn btn-dark">Edit</a>
+            <a href="{% url 'books:review_delete' pk=review.id %}" role="button" class="btn btn-dark">Delete</a>
+            <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
+        </div>
+    </div>
+{% endblock %}

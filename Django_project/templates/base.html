@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'books:genre_add' %}">Add genre</a>
                         </li>
+                        <li class="nav-item">
+                            <a  class="nav-link" href="{% url 'books:review_add' %}">Add review</a>
+                        </li>
                         <li>
                             <form class="form-inline" method="get">
                                 <input type="search" placeholder="Search" name="q"  value="{{ request.GET.q }}">
@@ -74,12 +77,15 @@
 
             </div>
             <br>
+        <div id="footer" class="footer">
             <div class="row">
 
                 {% block footer %}
                 {% endblock footer  %}
 
             </div>
+        </div>
+
             <script src="/static/jquery.min.js"></script>
             <script src="/static/popper.min.js"></script>
             <script src="/static/bootstrap.min.js"></script>

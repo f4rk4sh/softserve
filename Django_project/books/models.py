@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class Book(models.Model):
     author = models.ManyToManyField(Author, related_name='books')
     date = models.DateField('publication date', null=True)
     genre = models.ManyToManyField(Genre, related_name='books')
-    description = models.CharField('description', max_length=2000)
+    description = models.TextField('description')
 
     def __str__(self):
         return self.title
@@ -33,19 +34,27 @@ class Book(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
-    review = models.CharField('review', max_length=2000)
+    creator = models.CharField('author', max_length=100, blank=True)
+    topic = models.CharField('topic', max_length=100, blank=True)
+    review = models.TextField('review')
     timestamp = models.DateTimeField('timestamp', auto_now=True)
 
+    class Meta:
+        ordering = ['timestamp']
+
     def __str__(self):
-        return self.review
+        return self.topic
 
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='comments')
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
-    comment = models.CharField('comment', max_length=500)
+    comment = models.CharField('comment', max_length=255)
     timestamp = models.DateTimeField('timestamp', auto_now=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    class Meta:
+        ordering = ['timestamp']
 
     def __str__(self):
         return self.comment
