@@ -1,11 +1,13 @@
 from django.urls import path
 from books.views import BookListView,  BookDetailView, BookAddView, BookUpdateView, BookDeleteView, \
     AuthorAddView, GenreAddView, ReviewDetailView, ReviewAddView, ReviewUpdateView, ReviewDeleteView, \
-    CommentUpdateView, CommentDeleteView
+    CommentUpdateView, CommentDeleteView, BookAddLike, BookAddDislike
 
 urlpatterns = [
     path('', BookListView.as_view(), name='book_list'),
     path(r'book/<int:pk>/', BookDetailView.as_view(), name='book_detail'),
+    path('book/<int:pk>/like', BookAddLike.as_view(), name='book_like'),
+    path('book/<int:pk>/dislike', BookAddDislike.as_view(), name='book_dislike'),
     path(r'add/book/', BookAddView.as_view(), name='book_add'),
     path(r'book/<int:pk>/edit', BookUpdateView.as_view(), name='book_update'),
     path(r'book/<int:pk>/delete', BookDeleteView.as_view(), name='book_delete'),

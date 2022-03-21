@@ -5,7 +5,7 @@ from books.models import Book, Author, Genre, Review, Comment
 class BookForm(ModelForm):
     class Meta:
         model = Book
-        fields = '__all__'
+        exclude = ['likes', 'dislikes']
 
 
 class AuthorForm(ModelForm):

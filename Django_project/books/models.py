@@ -25,6 +25,11 @@ class Book(models.Model):
     date = models.DateField('publication date', null=True)
     genre = models.ManyToManyField(Genre, related_name='books')
     description = models.TextField('description')
+    likes = models.ManyToManyField(User, blank=True, related_name='likes')
+    dislikes = models.ManyToManyField(User, blank=True, related_name='dislikes')
+
+    def get_likes(self):
+        return self.likes.user.count()
 
     def __str__(self):
         return self.title
@@ -56,4 +61,4 @@ class Comment(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        return self.comment
+        return self.comment[:30]

@@ -7,19 +7,21 @@
 {% block content %}
 {% for book in books %}
     <div class="col-md-3">
-        <a href="{% url 'books:book_detail' pk=book.id %}" class="link">
-            <img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}">
-            <div class="card-body">
-                <h4>{{ book }}</h4>
-                <p>{% for genre in book.genre.all %}
+        <div class="card-book">
+            <p><img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}"></p>
+            <h4>{{ book }}</h4>
+            <p>
+                {% for genre in book.genre.all %}
                     <span class="badge bg-dark text-light">{{ genre }}</span>
-                {% endfor %}</p>
-                <p><b>Author:</b>
-                    {% for author in book.author.all %}
-                        {{ author }}
-                    {% endfor %}</p>
-            </div>
-        </a>
+                {% endfor %}
+            </p>
+            <p>by:
+                {% for author in book.author.all %}
+                    <b>{{ author }}</b>
+                {% endfor %}
+            </p>
+            <a href="{% url 'books:book_detail' pk=book.id %}" role="button" class="btn btn-secondary">View more</a>
+        </div>
     </div>
 {% endfor %}
     <div class="pagination">

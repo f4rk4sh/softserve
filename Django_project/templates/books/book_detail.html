@@ -7,10 +7,23 @@
 
 {% block content %}
     <div class="col-md-3">
-        <img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}"><br><br>
-            <a href="{% url 'books:book_update' pk=book.id %}" role="button" class="btn btn-dark">Edit</a>
-            <a href="{% url 'books:book_delete' pk=book.id %}" role="button" class="btn btn-dark">Delete</a>
-            <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
+        <div class="card-book">
+            <p><img class="card-img-top" src="{{ book.cover.url }}" alt="Cover of {{ title }}"></p>
+            <div class="likes">
+                <form method="POST" action="{% url 'books:book_like' book.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-success" type="submit">like it! |
+                    <span>{{ book.likes.all.count }}</span></button>
+                </form>
+                <form method="POST" action="{% url 'books:book_dislike' book.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-danger" type="submit">dislike |
+                    <span>{{ book.dislikes.all.count }}</span></button>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="col-md-9">
         <div class="card-body">
@@ -21,9 +34,13 @@
                 {% endfor %}</p>
             <p>{% for genre in book.genre.all %}
                 <span class="badge bg-dark text-light">{{ genre }}</span>
-            {% endfor %}</p>
+                {% endfor %}</p>
             <p><b>Published on:</b> {{ book.date }}</p>
             <p><b>Description:</b> {{ book.description }}</p>
+            <p>
+                <a href="{% url 'books:book_update' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Edit book</a>
+                <a href="{% url 'books:book_delete' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Delete book</a>
+            </p>
             <p><b>Reviews ({{ reviews|length }})</b><br>
                 {% for review in reviews %}
                     <h5>{{ review }}</h5>

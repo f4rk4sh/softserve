@@ -1,6 +1,8 @@
+from django.db.models import Q
+from django.http import HttpResponseRedirect
 from books.models import Book, Author, Genre, Review, Comment
 from books.forms import BookForm, AuthorForm, GenreForm, ReviewForm, CommentForm
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
@@ -11,7 +13,10 @@ User = get_user_model()
 class SearchMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(title__icontains=self.request.GET.get('q', ''))
+        return queryset.filter(
+            Q(title__icontains=self.request.GET.get('q', '')) |
+            Q(author__name__icontains=self.request.GET.get('q', ''))
+        ).order_by('likes')
 
 
 class BookListView(SearchMixin, ListView):
@@ -154,3 +159,49 @@ class CommentDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
+
+
+class BookAddLike(View):
+    def post(self, request, pk, *args, **kwargs):
+        book = Book.objects.get(pk=pk)
+        is_dislike = False
+        for dislike in book.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        if is_dislike:
+            book.dislikes.remove(request.user)
+        is_like = False
+        for like in book.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+        if not is_like:
+            book.likes.add(request.user)
+        if is_like:
+            book.likes.remove(request.user)
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+
+
+class BookAddDislike(View):
+    def post(self, request, pk, *args, **kwargs):
+        book = Book.objects.get(pk=pk)
+        is_like = False
+        for like in book.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+        if is_like:
+            book.likes.remove(request.user)
+        is_dislike = False
+        for dislike in book.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        if not is_dislike:
+            book.dislikes.add(request.user)
+        if is_dislike:
+            book.dislikes.remove(request.user)
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)

@@ -9,6 +9,9 @@
     text-decoration: none;
     color: dimgray;
 }
+.form {
+    margin-top: 5px;
+}
 
 img {
     text-align: center;
@@ -47,4 +50,22 @@ img {
     margin-bottom: 15px;
     margin-left: 50px;
     padding: 15px;
+}
+
+.card-book {
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    outline-color: light-grey;
+    outline-width: 2px;
+    margin-bottom: 25px;
+    padding: 10px;
+}
+
+.likes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 10px;
 }
