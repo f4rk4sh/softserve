@@ -1,11 +1,11 @@
-.book-list:link,
-.book-list:visited,
-.book-list:active {
+.link:link,
+.link:visited,
+.link:active {
     text-decoration: none;
     color: black;
 }
 
-.book-list:hover {
+.link:hover {
     text-decoration: none;
     color: dimgray;
 }
@@ -31,6 +31,7 @@ img {
 
 .comment {
     border: 1px solid #ccc;
+    border-radius: 5px;
     outline-color: light-grey;
     outline-width: 2px;
     margin-bottom: 15px;
@@ -39,10 +40,11 @@ img {
 
 .reply {
     border: 1px solid #ccc;
+    border-radius: 5px;
     background-color: #ECF0F1;
     outline-color: light-grey;
     outline-width: 2px;
     margin-bottom: 15px;
-    margin-left: 40px;
+    margin-left: 50px;
     padding: 15px;
 }

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
     # Third party apps
 
+    'django_bootstrap_icons',
     'bootstrapform',
     'crispy_forms',
 

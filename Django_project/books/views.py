@@ -139,12 +139,6 @@ class ReviewDeleteView(DeleteView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
-class CommentDetailView(DetailView):
-    model = Comment
-    context_object_name = 'comment'
-    template_name = 'books/comment_detail.html'
-
-
 class CommentUpdateView(UpdateView):
     model = Comment
     form_class = CommentForm

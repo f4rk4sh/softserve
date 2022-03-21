@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 
 User = get_user_model()
 
@@ -54,7 +53,7 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
 
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['-timestamp']
 
     def __str__(self):
         return self.comment

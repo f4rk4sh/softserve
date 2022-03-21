@@ -1,7 +1,7 @@
 from django.urls import path
 from books.views import BookListView,  BookDetailView, BookAddView, BookUpdateView, BookDeleteView, \
     AuthorAddView, GenreAddView, ReviewDetailView, ReviewAddView, ReviewUpdateView, ReviewDeleteView, \
-    CommentDetailView, CommentUpdateView, CommentDeleteView
+    CommentUpdateView, CommentDeleteView
 
 urlpatterns = [
     path('', BookListView.as_view(), name='book_list'),
@@ -15,7 +15,6 @@ urlpatterns = [
     path(r'add/review/', ReviewAddView.as_view(), name='review_add'),
     path(r'review/<int:pk>/edit', ReviewUpdateView.as_view(), name='review_update'),
     path(r'review/<int:pk>/delete', ReviewDeleteView.as_view(), name='review_delete'),
-    path(r'comment/<int:pk>/', CommentDetailView.as_view(), name='comment_detail'),
     path(r'comment/<int:pk>/edit', CommentUpdateView.as_view(), name='comment_update'),
     path(r'comment/<int:pk>/delete', CommentDeleteView.as_view(), name='comment_delete'),
 ]
