@@ -37,10 +37,12 @@
                 {% endfor %}</p>
             <p><b>Published on:</b> {{ book.date }}</p>
             <p><b>Description:</b> {{ book.description }}</p>
-            <p>
-                <a href="{% url 'books:book_update' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Edit book</a>
-                <a href="{% url 'books:book_delete' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Delete book</a>
-            </p>
+            {% if request.user.role == 2 %}
+                <p>
+                    <a href="{% url 'books:book_update' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Edit book</a>
+                    <a href="{% url 'books:book_delete' pk=book.id %}" role="button" class="btn btn-sm btn-secondary">Delete book</a>
+                </p>
+            {% endif %}
             <p><b>Reviews ({{ reviews|length }})</b><br>
                 {% for review in reviews %}
                     <h5>{{ review }}</h5>
@@ -51,34 +53,41 @@
                     <p>no reviews yet</p>
                 {% endfor %}
             <p><b>Comments ({{ comments|length }})</b></p>
-            <form class="form" action="." method="post">
-                {% csrf_token %}
-                <p>{{ form|crispy }}</p>
-                <button type="submit" class="btn btn-sm btn-secondary">Add comment</button>
-            </form><br>
-                {% for comment in comments %}
+            {% if request.user.role == 1 or request.user.role == 2 %}
+                <form class="form" action="." method="post">
+                    {% csrf_token %}
+                    <p>{{ form|crispy }}</p>
+                    <button type="submit" class="btn btn-sm btn-secondary">Add comment</button>
+                </form><br>
+            {% endif %}
+            {% for comment in comments %}
                 <div class="comment">
                     <p><em><b>{{ comment.author }}</b> at {{ comment.timestamp }}</em></p>
                     <p>"{{ comment.comment }}"</p>
-                    <a href="{% url 'books:comment_update' pk=comment.id %}" role="button" class="btn btn-sm btn-secondary">Edit</a>
-                    <a href="{% url 'books:comment_delete' pk=comment.id %}" role="button" class="btn btn-sm btn-secondary">Delete</a>
-                    <form class="form" action="." method="post">
-                        {% csrf_token %}
-                        <p>{{ form|crispy }}</p>
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <input class="btn btn-sm btn-secondary" type="submit" value="Add reply">
-                    </form>
+                    {% if request.user == comment.author or request.user.role == 2 %}
+                        <a href="{% url 'books:comment_update' pk=comment.id %}" role="button" class="btn btn-sm btn-secondary">Edit</a>
+                        <a href="{% url 'books:comment_delete' pk=comment.id %}" role="button" class="btn btn-sm btn-secondary">Delete</a>
+                    {% endif %}
+                    {% if request.user.role == 1 or request.user.role == 2 %}
+                        <form class="form" action="." method="post">
+                            {% csrf_token %}
+                            <p>{{ form|crispy }}</p>
+                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                            <input class="btn btn-sm btn-secondary" type="submit" value="Add reply">
+                        </form>
+                    {% endif %}
                 </div>
-                    {% for reply in comment.replies.all %}
+                {% for reply in comment.replies.all %}
                     <div class="reply">
                         <p><em><b>{{ reply.author }}</b> at {{ reply.timestamp }}</em></p>
-                        <p>replied <em>"{{ reply.parent }}"</em> with</p>
                         <p>"{{ reply }}"</p>
-                        <a href="{% url 'books:comment_update' pk=reply.id %}" role="button" class="btn btn-sm btn-secondary">Edit</a>
-                        <a href="{% url 'books:comment_delete' pk=reply.id %}" role="button" class="btn btn-sm btn-secondary">Delete</a>
+                        {% if request.user == reply.author or request.user.role == 2 %}
+                            <a href="{% url 'books:comment_update' pk=reply.id %}" role="button" class="btn btn-sm btn-secondary">Edit</a>
+                            <a href="{% url 'books:comment_delete' pk=reply.id %}" role="button" class="btn btn-sm btn-secondary">Delete</a>
+                        {% endif %}
                     </div>
-                    {% endfor %}
                 {% endfor %}
+            {% endfor %}
         </div>
     </div>
 {% endblock content %}

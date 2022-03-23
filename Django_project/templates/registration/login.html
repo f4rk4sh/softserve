@@ -7,14 +7,19 @@
 
 {% block content %}
     <div class="col-md-3">
-        <h4>Log in</h4>
-        <form method="post">
-            {% csrf_token %}
-            {{ form|bootstrap }} <br>
-            <div class="form-group">
-                <button type="submit" class="btn btn-dark">Log in</button>
-                <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
-            </div>
-        </form>
+            <h4>Log in</h4>
+            {% if request.user.is_authenticated %}
+                <p>You have already logged in.</p>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|bootstrap }}
+                    Don't have an account yet? <a href="{% url 'authentication:signup' %}">Sign Up</a>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-dark">Log in</button>
+                        <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
+                    </div>
+                </form>
+            {% endif %}
     </div>
 {% endblock %}

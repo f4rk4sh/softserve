@@ -12,9 +12,11 @@
             <p><b>Published on:</b> {{ review.timestamp }}</p>
             <p><b>Author:</b> {{ review.creator }}</p>
             <p><b>Topic:</b> {{ review }}</p>
-            <p><b>Text:</b><br>"{{ review.review }}"</p>
-            <a href="{% url 'books:review_update' pk=review.id %}" role="button" class="btn btn-dark">Edit</a>
-            <a href="{% url 'books:review_delete' pk=review.id %}" role="button" class="btn btn-dark">Delete</a>
+            <p><b>Text:</b><br><pre>"{{ review.review }}"</pre></p>
+            {% if request.user.role == 2 %}
+                <a href="{% url 'books:review_update' pk=review.id %}" role="button" class="btn btn-dark">Edit</a>
+                <a href="{% url 'books:review_delete' pk=review.id %}" role="button" class="btn btn-dark">Delete</a>
+            {% endif %}
             <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
         </div>
     </div>

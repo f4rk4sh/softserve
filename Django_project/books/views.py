@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 User = get_user_model()
 
@@ -23,10 +24,11 @@ class BookListView(SearchMixin, ListView):
     model = Book
     context_object_name = 'books'
     template_name = 'books/book_list.html'
-    paginate_by = 10
+    paginate_by = 8
 
 
-class BookDetailView(FormMixin, DetailView):
+class BookDetailView(LoginRequiredMixin, PermissionRequiredMixin, FormMixin, DetailView):
+    permission_required = 'books.view_book'
     model = Book
     form_class = CommentForm
     context_object_name = 'book'
@@ -70,7 +72,8 @@ class BookDetailView(FormMixin, DetailView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.pk})
 
 
-class BookAddView(CreateView):
+class BookAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'books.add_book'
     model = Book
     form_class = BookForm
     template_name = 'books/book_add.html'
@@ -79,7 +82,8 @@ class BookAddView(CreateView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.pk})
 
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'books.change_book'
     model = Book
     form_class = BookForm
     template_name = 'books/book_update.html'
@@ -88,31 +92,37 @@ class BookUpdateView(UpdateView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.pk})
 
 
-class BookDeleteView(DeleteView):
+class BookDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'books.delete_book'
     model = Book
     template_name = 'books/delete.html'
     success_url = reverse_lazy('books:book_list')
 
 
-class AuthorAddView(CreateView):
+class AuthorAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'books.add_author'
+    permission_denied_message = 'only moderators'
     model = Author
     form_class = AuthorForm
     template_name = 'books/author_add.html'
 
 
-class GenreAddView(CreateView):
+class GenreAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'books.add_genre'
     model = Genre
     form_class = GenreForm
     template_name = 'books/genre_add.html'
 
 
-class ReviewDetailView(DetailView):
+class ReviewDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    permission_required = 'books.view_review'
     model = Review
     context_object_name = 'review'
     template_name = 'books/review_detail.html'
 
 
-class ReviewAddView(CreateView):
+class ReviewAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'books.add_review'
     model = Review
     form_class = ReviewForm
     template_name = 'books/review_add.html'
@@ -127,7 +137,8 @@ class ReviewAddView(CreateView):
         return reverse_lazy('books:review_detail', kwargs={'pk': self.object.pk})
 
 
-class ReviewUpdateView(UpdateView):
+class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'books.change_review'
     model = Review
     form_class = ReviewForm
     template_name = 'books/review_update.html'
@@ -136,7 +147,8 @@ class ReviewUpdateView(UpdateView):
         return reverse_lazy('books:review_detail', kwargs={'pk': self.object.book.pk})
 
 
-class ReviewDeleteView(DeleteView):
+class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'books.delete_review'
     model = Review
     template_name = 'books/delete.html'
 
@@ -144,7 +156,8 @@ class ReviewDeleteView(DeleteView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
-class CommentUpdateView(UpdateView):
+class CommentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'books.change_comment'
     model = Comment
     form_class = CommentForm
     template_name = 'books/comment_update.html'
@@ -153,7 +166,8 @@ class CommentUpdateView(UpdateView):
         return reverse_lazy('books:comment_detail', kwargs={'pk': self.object.book.pk})
 
 
-class CommentDeleteView(DeleteView):
+class CommentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'books.delete_comment'
     model = Comment
     template_name = 'books/delete.html'
 
@@ -161,7 +175,9 @@ class CommentDeleteView(DeleteView):
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
-class BookAddLike(View):
+class BookAddLike(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'books.add_like'
+
     def post(self, request, pk, *args, **kwargs):
         book = Book.objects.get(pk=pk)
         is_dislike = False
@@ -184,7 +200,9 @@ class BookAddLike(View):
         return HttpResponseRedirect(next)
 
 
-class BookAddDislike(View):
+class BookAddDislike(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'books.add_dislike'
+
     def post(self, request, pk, *args, **kwargs):
         book = Book.objects.get(pk=pk)
         is_like = False

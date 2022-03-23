@@ -8,13 +8,19 @@
 {% block content %}
     <div class="col-md-4">
         <h4>Sign up</h4>
-        <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <div class="form-group">
-                <button type="submit" class="btn btn-dark">Sign up</button>
-                <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
-            </div>
-        </form>
+        {% if request.user.is_authenticated %}
+            <p>You have already signed in.</p>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                Already have an account? <a href="{% url 'authentication:login' %}">Log in</a>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-dark">Sign up</button>
+                    <a href="{% url 'authentication:login' %}" role="button" class="btn btn-dark">Log in</a>
+                    <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
+                </div>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

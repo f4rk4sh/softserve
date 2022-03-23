@@ -28,8 +28,11 @@ class Book(models.Model):
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
     dislikes = models.ManyToManyField(User, blank=True, related_name='dislikes')
 
-    def get_likes(self):
-        return self.likes.user.count()
+    class Meta:
+        permissions = (
+            ('add_like', 'Can add like'),
+            ('add_dislike', 'Can add dislike'),
+        )
 
     def __str__(self):
         return self.title

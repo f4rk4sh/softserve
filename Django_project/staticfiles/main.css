@@ -32,6 +32,10 @@ img {
     max-width: 100ch;
 }
 
+pre {
+    white-space: pre-wrap;
+}
+
 .comment {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -56,7 +60,6 @@ img {
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 5px;
-
     outline-color: light-grey;
     outline-width: 2px;
     margin-bottom: 25px;
