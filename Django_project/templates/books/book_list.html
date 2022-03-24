@@ -20,7 +20,7 @@
                     <b>{{ author }}</b>
                 {% endfor %}
             </p>
-            <a href="{% url 'books:book_detail' pk=book.id %}" role="button" class="btn btn-secondary">View more</a>
+            <a href="{% url 'books:book_detail' pk=book.id %}" role="button" class="btn btn-success">View more</a>
         </div>
     </div>
 {% endfor %}

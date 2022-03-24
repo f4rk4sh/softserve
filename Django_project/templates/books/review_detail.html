@@ -14,8 +14,8 @@
             <p><b>Topic:</b> {{ review }}</p>
             <p><b>Text:</b><br><pre>"{{ review.review }}"</pre></p>
             {% if request.user.role == 2 %}
-                <a href="{% url 'books:review_update' pk=review.id %}" role="button" class="btn btn-dark">Edit</a>
-                <a href="{% url 'books:review_delete' pk=review.id %}" role="button" class="btn btn-dark">Delete</a>
+                <a href="{% url 'books:review_update' pk=review.id %}" role="button" class="btn btn-warning">Edit</a>
+                <a href="{% url 'books:review_delete' pk=review.id %}" role="button" class="btn btn-danger">Delete</a>
             {% endif %}
             <a href="javascript:history.back()" role="button" class="btn btn-dark">Back</a>
         </div>

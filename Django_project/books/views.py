@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from books.models import Book, Author, Genre, Review, Comment
 from books.forms import BookForm, AuthorForm, GenreForm, ReviewForm, CommentForm
@@ -17,7 +17,7 @@ class SearchMixin:
         return queryset.filter(
             Q(title__icontains=self.request.GET.get('q', '')) |
             Q(author__name__icontains=self.request.GET.get('q', ''))
-        ).order_by('likes')
+        ).annotate(like_count=Count('likes')).order_by('-like_count')
 
 
 class BookListView(SearchMixin, ListView):
@@ -175,9 +175,7 @@ class CommentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
-class BookAddLike(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'books.add_like'
-
+class BookAddLike(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         book = Book.objects.get(pk=pk)
         is_dislike = False
