@@ -31,7 +31,6 @@ class Book(models.Model):
     class Meta:
         permissions = (
             ('add_like', 'Can add like'),
-            ('add_dislike', 'Can add dislike'),
         )
 
     def __str__(self):

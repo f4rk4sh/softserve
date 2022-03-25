@@ -17,12 +17,6 @@
                         <button class="btn btn-success" type="submit">like it! |
                         <span>{{ book.likes.all.count }}</span></button>
                     </form>
-                    <form method="POST" action="{% url 'books:book_dislike' book.pk %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button class="btn btn-danger" type="submit">dislike |
-                        <span>{{ book.dislikes.all.count }}</span></button>
-                    </form>
                 </div>
             {% endif %}
         </div>
@@ -39,7 +33,7 @@
                 {% endfor %}</p>
             <p><b>Published on:</b> {{ book.date }}</p>
             <p><b>Description:</b> {{ book.description }}</p>
-            {% if request.user.role == 2 %}
+            {% if request.user.role == 2 or request.user.role == 3 %}
                 <p>
                     <a href="{% url 'books:book_update' pk=book.id %}" role="button" class="btn btn-sm btn-warning">Edit book</a>
                     <a href="{% url 'books:book_delete' pk=book.id %}" role="button" class="btn btn-sm btn-danger">Delete book</a>
@@ -66,8 +60,10 @@
                 <div class="comment">
                     <p><em><b>{{ comment.author }}</b> at {{ comment.timestamp }}</em></p>
                     <p>"{{ comment.comment }}"</p>
-                    {% if request.user == comment.author or request.user.role == 2 %}
+                    {% if request.user == comment.author%}
                         <a href="{% url 'books:comment_update' pk=comment.id %}" role="button" class="btn btn-sm btn-warning">Edit</a>
+                    {% endif %}
+                    {% if request.user == comment.author or request.user.role == 2 or request.user.role == 3 %}
                         <a href="{% url 'books:comment_delete' pk=comment.id %}" role="button" class="btn btn-sm btn-danger">Delete</a>
                     {% endif %}
                     {% if request.user.role == 1 or request.user.role == 2 %}
@@ -83,8 +79,10 @@
                     <div class="reply">
                         <p><em><b>{{ reply.author }}</b> at {{ reply.timestamp }}</em></p>
                         <p>"{{ reply }}"</p>
-                        {% if request.user == reply.author or request.user.role == 2 %}
+                        {% if request.user == reply.author %}
                             <a href="{% url 'books:comment_update' pk=reply.id %}" role="button" class="btn btn-sm btn-warning">Edit</a>
+                        {% endif %}
+                        {% if request.user == reply.author or request.user.role == 2 or request.user.role == 3 %}
                             <a href="{% url 'books:comment_delete' pk=reply.id %}" role="button" class="btn btn-sm btn-danger">Delete</a>
                         {% endif %}
                     </div>

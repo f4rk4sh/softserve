@@ -163,7 +163,7 @@ class CommentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     template_name = 'books/comment_update.html'
 
     def get_success_url(self):
-        return reverse_lazy('books:comment_detail', kwargs={'pk': self.object.book.pk})
+        return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
 class CommentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -175,7 +175,9 @@ class CommentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         return reverse_lazy('books:book_detail', kwargs={'pk': self.object.book.pk})
 
 
-class BookAddLike(LoginRequiredMixin, View):
+class BookAddLike(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'books.add_like'
+
     def post(self, request, pk, *args, **kwargs):
         book = Book.objects.get(pk=pk)
         is_dislike = False
@@ -194,30 +196,5 @@ class BookAddLike(LoginRequiredMixin, View):
             book.likes.add(request.user)
         if is_like:
             book.likes.remove(request.user)
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
-
-
-class BookAddDislike(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'books.add_dislike'
-
-    def post(self, request, pk, *args, **kwargs):
-        book = Book.objects.get(pk=pk)
-        is_like = False
-        for like in book.likes.all():
-            if like == request.user:
-                is_like = True
-                break
-        if is_like:
-            book.likes.remove(request.user)
-        is_dislike = False
-        for dislike in book.dislikes.all():
-            if dislike == request.user:
-                is_dislike = True
-                break
-        if not is_dislike:
-            book.dislikes.add(request.user)
-        if is_dislike:
-            book.dislikes.remove(request.user)
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
