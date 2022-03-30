@@ -1,0 +1,2 @@
+FLASK_APP=interviewer.py
+FLASK_ENV=development
