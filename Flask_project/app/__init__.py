@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_bootstrap import Bootstrap
+from flask_mail import Mail
 from config import Config
 
 db = SQLAlchemy()
@@ -13,6 +14,7 @@ login.login_view = 'auth.login'
 login.login_message = 'Please log in to access this page.'
 admin = Admin()
 bootstrap = Bootstrap()
+mail = Mail()
 
 
 def create_app(config_class=Config):
@@ -23,6 +25,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
+    mail.init_app(app)
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
