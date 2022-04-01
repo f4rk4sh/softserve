@@ -4,7 +4,7 @@ We are glad to invite you to the Interviewer!
 
 Please complete registration by setting password for your account
 
-{{ url_for('auth.set_password', token=token, _external=True) }}
+{{ url_for('users.set_password', token=token, _external=True) }}
 
 If you have received this email by mistake simply ignore this message.
 
