@@ -38,6 +38,5 @@ def set_password(token):
         user.set_password(form.password.data)
         db.session.commit()
         flash('Registration has been successfully completed!')
-        login_user(user)
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
     return render_template('users/set_password.html', form=form)

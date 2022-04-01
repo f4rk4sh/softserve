@@ -2,7 +2,7 @@ Dear {{ user.first_name }},
 
 We are glad to invite you to the Interviewer!
 
-Please complete registration by setting password for your account
+To complete your registration click on the following link:
 
 {{ url_for('users.set_password', token=token, _external=True) }}
 

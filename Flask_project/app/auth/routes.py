@@ -1,9 +1,11 @@
 from app.auth import bp
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user
-from app.auth.forms import LoginForm
+from app.auth.forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
 from werkzeug.urls import url_parse
+from app.auth.email import send_reset_password_email
+from app import db
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -28,3 +30,34 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+@bp.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_reset_password_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password_request.html', form=form)
+
+
+@bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    user = User.verify_set_password_token(token)
+    if not user:
+        return redirect(url_for('main.index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Password has been successfully reset!')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', form=form)
+
