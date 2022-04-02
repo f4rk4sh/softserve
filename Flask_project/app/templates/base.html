@@ -1,7 +1,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if title %}{{ title }} | Interviewer {% else %} Welcome to Interviewer {% endif %}
+    {% if title %}{{ title }} | Interviewer {% else %} Welcome to the Interviewer {% endif %}
 {% endblock %}
 
 {% block navbar %}
@@ -23,12 +23,14 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_admin %}
-                    <li><a href="{{ url_for('users.register_user') }}">Register user</a></li>
+                    <li><a href="{{ url_for('users.user_list') }}">Users</a></li>
                     {% endif %}
                     {% if current_user.is_anonymous %}
                     <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                     {% else %}
-                    <li><a href="#">Profile</a></li>
+                    {% if not current_user.is_admin %}
+                        <li><a href="#">Profile</a></li>
+                    {% endif %}
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>
