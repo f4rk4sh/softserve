@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, SubmitField, StringField
+from wtforms import EmailField, PasswordField, SubmitField, StringField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
 
@@ -8,6 +8,8 @@ class UserRegistrationForm(FlaskForm):
     first_name = StringField('First name', validators=[DataRequired()])
     last_name = StringField('Last name', validators=[DataRequired()])
     email = EmailField('Email address', validators=[DataRequired(), Email()])
+    is_admin = BooleanField('Admin')
+    is_recruiter = BooleanField('Recruiter')
     submit = SubmitField('Send invitation')
 
     def validate_email(self, email):

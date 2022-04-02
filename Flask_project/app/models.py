@@ -13,9 +13,13 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
+    is_recruiter = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<User {self.id}>'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

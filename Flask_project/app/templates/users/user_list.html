@@ -12,8 +12,9 @@
                 <th scope="col"></th>
                 <th scope="col">First name</th>
                 <th scope="col">Last name</th>
-                <th scope="col">Email address</th>
                 <th scope="col">Admin</th>
+                <th scope="col">Recruiter</th>
+                <th scope="col">Email address</th>
             </tr>
         </thead>
         <tbody>
@@ -31,13 +32,19 @@
                 </td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
-                <td>{{ user.email }}</td>
                 <td>{% if user.is_admin %}
                         <span class="glyphicon glyphicon-ok-circle"></span>
                     {% else %}
                         <span class="glyphicon glyphicon-remove-circle"></span>
                     {% endif %}
                 </td>
+                <td>{% if user.is_recruiter %}
+                        <span class="glyphicon glyphicon-ok-circle"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                    {% endif %}
+                </td>
+                <td>{{ user.email }}</td>
             </tr>
         {% endfor %}
         </tbody>

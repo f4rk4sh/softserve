@@ -75,10 +75,10 @@ def user_edit(user_id):
 @admin_required
 def user_delete(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
-    if User.query.filter_by(is_admin=True).count() == 1:
+    db.session.delete(user)
+    if User.query.filter_by(is_admin=True).count() == 0:
         flash('You can not delete last admin user.')
         return redirect(url_for('users.user_list'))
-    db.session.delete(user)
     db.session.commit()
     flash('User has been successfully deleted.')
     return redirect(url_for('users.user_list'))
