@@ -5,7 +5,7 @@ from app.users.forms import UserRegistrationForm, SetPasswordForm, UserEditForm
 from app.models import User
 from app.users.email import send_registration_email
 from app import db
-from app.decorators import admin_required
+from app.decorators import admin_required, no_authentication_required
 
 
 @bp.route('/register_user', methods=['GET', 'POST'])
@@ -28,9 +28,8 @@ def register_user():
 
 
 @bp.route('/register/<token>', methods=['GET', 'POST'])
+@no_authentication_required
 def set_password(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
     user = User.verify_set_password_token(token)
     if not user:
         return redirect(url_for('main.index'))

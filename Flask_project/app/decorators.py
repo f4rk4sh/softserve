@@ -11,3 +11,13 @@ def admin_required(func):
             return redirect(url_for('main.index'))
         return func(*args, **kwargs)
     return decorated_view
+
+
+def no_authentication_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.is_authenticated:
+            flash('You are already logged in.')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
+    return decorated_view

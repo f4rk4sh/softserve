@@ -6,12 +6,12 @@ from app.models import User
 from werkzeug.urls import url_parse
 from app.auth.email import send_reset_password_email
 from app import db
+from app.decorators import no_authentication_required
 
 
 @bp.route('/login', methods=['GET', 'POST'])
+@no_authentication_required
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -33,9 +33,8 @@ def logout():
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
+@no_authentication_required
 def reset_password_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -47,9 +46,8 @@ def reset_password_request():
 
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+@no_authentication_required
 def reset_password(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
     user = User.verify_set_password_token(token)
     if not user:
         return redirect(url_for('main.index'))
@@ -60,4 +58,3 @@ def reset_password(token):
         flash('Password has been successfully reset!')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
-
