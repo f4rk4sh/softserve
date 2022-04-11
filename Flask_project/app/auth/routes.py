@@ -22,7 +22,7 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             return redirect(url_for('main.index'))
-        return redirect(url_for(next_page))
+        return redirect(next_page)
     return render_template('auth/login.html', title='Sign in', form=form)
 
 

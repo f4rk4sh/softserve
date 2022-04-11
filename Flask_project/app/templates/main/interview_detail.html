@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="detail">
+        <h1>Interview</h1>
+        <p><b>Interviewee:</b> {{ interview.interviewee }}</p>
+        <p><b>Brief info:</b> {{ interview.brief }}</p>
+        <p><b>Date:</b> {{ interview.date }}</p>
+        <p><b>Time:</b> {{ interview.time }}</p>
+        {% if not rated %}
+            {% if interview.questions %}
+                <p><a href="{{ url_for('main.interview', interview_id=interview.id) }}" role="button" class="btn btn-success">Start Interview</a>
+            {% endif %}
+            <a href="{{ url_for('main.interview_question', interview_id=interview.id) }}" role="button" class="btn btn-primary">Manage questions</a></p>
+        {% else %}
+        <p><b>Score:</b> {{ interview.score }}/100</p>
+        {% endif %}
+        <p>
+            <b>Questions ({{ interview.questions|length }})</b><br>
+            {% if not interview.questions %}
+                no questions yet
+            {% else %}
+                {% for question in interview.questions %}
+                    {{ loop.index }}. {{ question }}<br>
+                {% endfor %}
+            {% endif %}
+        </p>
+    </div>
+{% endblock %}

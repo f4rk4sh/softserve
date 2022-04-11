@@ -16,8 +16,7 @@ def register_user():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
-            user = User(first_name=form.first_name.data,
-                        last_name=form.last_name.data,
+            user = User(name=form.name.data,
                         email=form.email.data)
             db.session.add(user)
             db.session.commit()
@@ -57,15 +56,13 @@ def user_edit(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserEditForm(user.email)
     if form.validate_on_submit():
-        user.first_name = form.first_name.data
-        user.last_name = form.last_name.data
+        user.name = form.name.data
         user.email = form.email.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('users.user_list'))
     elif request.method == 'GET':
-        form.first_name.data = user.first_name
-        form.last_name.data = user.last_name
+        form.name.data = user.name
         form.email.data = user.email
     return render_template('users/user_edit.html', form=form)
 

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <a href="{{ url_for('main.set_add') }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </th>
+                <th scope="col"></th>
+                <th scope="col">Title</th>
+                <th scope="col">Area</th>
+                <th scope="col">Level</th>
+                <th scope="col">Questions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for set in sets %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('main.set_delete', set_id=set.id ) }}">
+                        <span class="glyphicon glyphicon-trash" onclick="return confirm('Are you sure you want to delete this set?')"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('main.set_edit', set_id=set.id )}}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </td>
+                <td>{{ set.title }}</td>
+                <td>{{ set.area }}</td>
+                <td>{{ set.level }}</td>
+                <td>{% for question in set.questions %}{{ loop.index }}. {{ question }}<br>{% endfor %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

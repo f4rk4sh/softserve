@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Interviewee</th>
+                <th scope="col">Brief info</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Interviewers</th>
+                <th scope="col">Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for interview in interviews %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('main.interview_delete', interview_id=interview.id ) }}">
+                        <span class="glyphicon glyphicon-trash" onclick="return confirm('Are you sure you want to delete this interview?')"></span>
+                    </a>
+                </td>
+                <td>{{ interview.interviewee }}</td>
+                <td>{{ interview.brief }}</td>
+                <td>{{ interview.date }}</td>
+                <td>{{ interview.time }}</td>
+                <td>{% for interviewer in interview.users %}{{ interviewer }}{% endfor %}</td>
+                <td>{{ interview.score }}/100</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

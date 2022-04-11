@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Interviewee</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Interviewers</th>
+                <th scope="col">Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for interview in interviews %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('main.interview_detail', interview_id=interview.id) }}">
+                            <span class="glyphicon glyphicon-new-window"></span>
+                    </a>
+                </td>
+                <td>{{ interview.interviewee }}</td>
+                <td>{{ interview.date }}</td>
+                <td>{{ interview.time }}</td>
+                <td>{% for interviewer in interview.users %}{{ interviewer }}<br>{% endfor %}</td>
+                <td>
+                    {% if interview.score %}
+                        {{ interview.score }}/100
+                    {% else %}
+                        not rated yet
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

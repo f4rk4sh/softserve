@@ -5,8 +5,7 @@ from app.models import User
 
 
 class UserRegistrationForm(FlaskForm):
-    first_name = StringField('First name', validators=[DataRequired()])
-    last_name = StringField('Last name', validators=[DataRequired()])
+    name = StringField('Full name', validators=[DataRequired()])
     email = EmailField('Email address', validators=[DataRequired(), Email()])
     is_admin = BooleanField('Admin')
     is_recruiter = BooleanField('Recruiter')
@@ -25,8 +24,7 @@ class SetPasswordForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
-    first_name = StringField('First name', validators=[DataRequired()])
-    last_name = StringField('Last name', validators=[DataRequired()])
+    name = StringField('Full name', validators=[DataRequired()])
     email = EmailField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Confirm')
 

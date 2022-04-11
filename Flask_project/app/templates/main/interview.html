@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <div class="interview">
+        <h1 style="margin-left: 15px;">Interview with <b> {{ interview.interviewee }} </b></h1>
+        <div class="col-md-10">
+            {% for question in interview.questions %}
+                <table class="table table-hover">
+                    <tbody>
+                        <tr style="height: 146.5px;">
+                            <td class="col-md-10">
+                                <p><b>Question # {{ loop.index }}</b></p>
+                                <p><b>{{ question.question }}</b></p>
+                                <p><em>{{ question.answer }}</em></p>
+                            </td>
+                            <td class="text-center">
+                                <p><b>Max grade</b></p>
+                                <p>{{ question.max_grade }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+        <div class="col-md-2">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {% for field in form.grade_set %}
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td class="grades text-center" style="height: 146.5px;">
+
+                                <p>{{ wtf.form_field(field.grade) }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endfor %}
+                <div class="grades text-center">
+                    {{ wtf.form_field(form.submit) }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
