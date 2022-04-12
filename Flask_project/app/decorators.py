@@ -21,3 +21,33 @@ def no_authentication_required(func):
             return redirect(url_for('main.index'))
         return func(*args, **kwargs)
     return decorated_view
+
+
+def admin_or_recruiter_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if not current_user.is_admin and not current_user.is_recruiter:
+            flash('You do not have permission to access this resource.')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
+    return decorated_view
+
+
+def admin_or_expert_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.is_recruiter:
+            flash('You do not have permission to access this resource.')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
+    return decorated_view
+
+
+def expert_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.is_admin or current_user.is_recruiter:
+            flash('You do not have permission to access this resource.')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
+    return decorated_view

@@ -2,9 +2,10 @@ from app.main import bp
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from app.models import Question, Set, Interview, Grade, User
-from app.main.forms import QuestionForm, QuestionSetForm, RecruiterInterviewForm, ManageQuestionsForm, GradeForm, GradeFormSet
+from app.main.forms import QuestionForm, QuestionSetForm, RecruiterInterviewForm, ManageQuestionsForm, GradeFormSet
 from app import db
 from datetime import date
+from app.decorators import admin_or_recruiter_required, admin_or_expert_required, expert_required
 
 
 @bp.route('/')
@@ -14,13 +15,15 @@ def index():
 
 @bp.route('/questions')
 @login_required
+@admin_or_expert_required
 def question_list():
     questions = Question.query.all()
-    return render_template('main/question_list.html', questions=questions)
+    return render_template('main/question_list.html', title='Questions', questions=questions)
 
 
 @bp.route('/questions/add', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def question_add():
     question = Question()
     form = QuestionForm()
@@ -30,11 +33,12 @@ def question_add():
         db.session.commit()
         flash('Question has been successfully added.')
         return redirect(url_for('main.question_list'))
-    return render_template('main/question_add.html', form=form)
+    return render_template('form.html', title='Add question', form=form)
 
 
 @bp.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def question_edit(question_id):
     question = Question.query.filter_by(id=question_id).first_or_404()
     form = QuestionForm()
@@ -48,11 +52,12 @@ def question_edit(question_id):
         form.question.data = question.question
         form.answer.data = question.answer
         form.max_grade.data = question.max_grade
-    return render_template('main/question_edit.html', form=form)
+    return render_template('form.html', title='Edit question', form=form)
 
 
 @bp.route('/question/<int:question_id>/delete', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def question_delete(question_id):
     question = Question.query.filter_by(id=question_id).first_or_404()
     db.session.delete(question)
@@ -63,13 +68,15 @@ def question_delete(question_id):
 
 @bp.route('/sets')
 @login_required
+@admin_or_expert_required
 def set_list():
     sets = Set.query.all()
-    return render_template('main/set_list.html', sets=sets)
+    return render_template('main/set_list.html', title='Question sets', sets=sets)
 
 
 @bp.route('/set/add', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def set_add():
     question_set = Set()
     form = QuestionSetForm()
@@ -80,11 +87,12 @@ def set_add():
         db.session.commit()
         flash('Question set has been successfully added.')
         return redirect(url_for('main.set_list'))
-    return render_template('main/set_add.html', form=form)
+    return render_template('form.html', title='Add question set', form=form)
 
 
 @bp.route('/set/<int:set_id>/edit', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def set_edit(set_id):
     question_set = Set.query.filter_by(id=set_id).first_or_404()
     form = QuestionSetForm()
@@ -99,11 +107,12 @@ def set_edit(set_id):
         form.area.data = question_set.area
         form.level.data = question_set.level
         form.questions.data = question_set.questions
-    return render_template('main/set_edit.html', form=form)
+    return render_template('form.html', title='Edit question set', form=form)
 
 
 @bp.route('/set/<int:set_id>/delete', methods=['GET', 'POST'])
 @login_required
+@admin_or_expert_required
 def set_delete(set_id):
     question_set = Set.query.filter_by(id=set_id).first_or_404()
     db.session.delete(question_set)
@@ -114,20 +123,23 @@ def set_delete(set_id):
 
 @bp.route('/interviews')
 @login_required
+@admin_or_recruiter_required
 def interview_list():
     interviews = Interview.query.filter(Interview.date >= date.today()).order_by('date')
-    return render_template('main/interview_list.html', interviews=interviews)
+    return render_template('main/interview_list.html', title='Interviews', interviews=interviews)
 
 
 @bp.route('/interviews/archive')
 @login_required
+@admin_or_recruiter_required
 def interview_list_archive():
     interviews = Interview.query.filter(Interview.date < date.today()).order_by('date')
-    return render_template('main/interview_list_archive.html', interviews=interviews)
+    return render_template('main/interview_list_archive.html', title='Archive', interviews=interviews)
 
 
 @bp.route('/interview/add', methods=['GET', 'POST'])
 @login_required
+@admin_or_recruiter_required
 def interview_add():
     item = Interview()
     form = RecruiterInterviewForm()
@@ -138,13 +150,17 @@ def interview_add():
         db.session.commit()
         flash('Interview has been successfully established.')
         return redirect(url_for('main.interview_list'))
-    return render_template('main/interview_add.html', form=form)
+    return render_template('form.html', title='Add interview', form=form)
 
 
 @bp.route('/interview/<int:interview_id>/edit', methods=['GET', 'POST'])
 @login_required
+@admin_or_recruiter_required
 def interview_edit(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first_or_404()
+    if Grade.query.filter_by(interview_id=interview.id).first():
+        flash('You can not edit already rated interview.')
+        return redirect(url_for('main.interview_list'))
     form = RecruiterInterviewForm()
     form.users.query = db.session.query(User).filter_by(is_admin=False, is_recruiter=False)
     if form.validate_on_submit():
@@ -158,11 +174,12 @@ def interview_edit(interview_id):
         form.date.data = interview.date
         form.time.data = interview.time
         form.users.data = interview.users
-    return render_template('main/interview_edit.html', form=form)
+    return render_template('form.html', title='Edit interview', form=form)
 
 
 @bp.route('/interview/<int:interview_id>/delete', methods=['GET', 'POST'])
 @login_required
+@admin_or_recruiter_required
 def interview_delete(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first_or_404()
     db.session.delete(interview)
@@ -173,14 +190,16 @@ def interview_delete(interview_id):
 
 @bp.route('/interview/<int:interview_id>/detail')
 @login_required
+@expert_required
 def interview_detail(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first_or_404()
     rated = True if Grade.query.filter_by(user_id=current_user.id, interview_id=interview.id).first() else False
-    return render_template('main/interview_detail.html', interview=interview, rated=rated)
+    return render_template('main/interview_detail.html', title='Interview detail', interview=interview, rated=rated)
 
 
 @bp.route('/interview/<int:interview_id>/questions', methods=['GET', 'POST'])
 @login_required
+@expert_required
 def interview_question(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first_or_404()
     if Grade.query.filter_by(interview_id=interview.id).first():
@@ -200,23 +219,27 @@ def interview_question(interview_id):
         return redirect(url_for('main.interview_detail', interview_id=interview.id))
     elif request.method == 'GET':
         form.questions.data = interview.questions
-    return render_template('main/interview_question.html', form=form)
+    return render_template('form.html', title='Add interview questions', form=form)
 
 
 @bp.route('/activities')
 @login_required
+@expert_required
 def activities():
     interviews = Interview.query.filter(
         Interview.users.contains(current_user),
         Interview.date >= date.today()
     ).order_by('date')
-    return render_template('main/activities.html', interviews=interviews)
+    return render_template('main/activities.html', title='Activities', interviews=interviews)
 
 
 @bp.route('/interview/<int:interview_id>/', methods=['GET', 'POST'])
 @login_required
 def interview(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first_or_404()
+    if current_user not in interview.users:
+        flash('You are not assigned as interviewer in this interview.')
+        return redirect(url_for('main.index'))
     if Grade.query.filter_by(user_id=current_user.id, interview_id=interview.id).first():
         flash('You have already taken part in this interview.')
         return redirect(url_for('main.interview_detail', interview_id=interview.id))
@@ -235,8 +258,8 @@ def interview(interview_id):
                           grade=grade_form.grade.data)
             db.session.add(grade)
             score += int(grade_form.grade.data)
-        interview.score = score / len(interview.users) / max_score * 100
+        interview.score = ((interview.score / 100 * max_score * len(interview.users)) + score) / len(interview.users) / max_score * 100
         db.session.commit()
         flash('You have successfully rated interview.')
         return redirect(url_for('main.activities'))
-    return render_template('main/interview.html', interview=interview, form=grade_set_form)
+    return render_template('main/interview.html', title='Interview', interview=interview, form=grade_set_form)

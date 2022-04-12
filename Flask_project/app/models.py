@@ -72,7 +72,7 @@ class Interview(db.Model):
     brief = db.Column(db.Text)
     date = db.Column(db.Date)
     time = db.Column(db.Time)
-    score = db.Column(db.Integer)
+    score = db.Column(db.Integer, default=0)
     users = db.relationship('User', secondary=user_interview, back_populates='interviews')
     sets = db.relationship('Set', secondary=interview_set, back_populates='interviews')
     questions = db.relationship('Question', secondary=interview_question, back_populates='interviews')

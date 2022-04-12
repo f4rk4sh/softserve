@@ -35,7 +35,7 @@
                 <td>{{ interview.brief }}</td>
                 <td>{{ interview.date }}</td>
                 <td>{{ interview.time }}</td>
-                <td>{% for interviewer in interview.users %}{{ interviewer }}{% endfor %}</td>
+                <td>{% for interviewer in interview.users %}{{ interviewer }}<br>{% endfor %}</td>
                 <td>
                     {% if not interview.score %}
                         not evaluated yet

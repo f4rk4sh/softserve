@@ -31,8 +31,10 @@
                             <li><a href="{{ url_for('main.interview_list') }}">Interviews</a></li>
                             <li><a href="{{ url_for('main.interview_list_archive') }}">Archive</a></li>
                         {% endif %}
+                        {% if not current_user.is_recruiter %}
                             <li><a href="{{ url_for('main.set_list') }}">Question sets</a></li>
                             <li><a href="{{ url_for('main.question_list') }}">Questions</a></li>
+                        {% endif %}
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

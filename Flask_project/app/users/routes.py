@@ -1,6 +1,6 @@
 from app.users import bp
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import current_user, login_required
+from flask_login import login_required
 from app.users.forms import UserRegistrationForm, SetPasswordForm, UserEditForm
 from app.models import User
 from app.users.email import send_registration_email
@@ -23,7 +23,7 @@ def register_user():
             send_registration_email(user)
             flash(f'A registration email has been sent to {user.email}')
             return redirect(url_for('users.user_list'))
-    return render_template('users/register_user.html', title='Register user', form=form)
+    return render_template('form.html', title='Register user', form=form)
 
 
 @bp.route('/register/<token>', methods=['GET', 'POST'])
@@ -38,7 +38,7 @@ def set_password(token):
         db.session.commit()
         flash('Registration has been successfully completed!')
         return redirect(url_for('auth.login'))
-    return render_template('users/set_password.html', form=form)
+    return render_template('form.html', title='Set password', form=form)
 
 
 @bp.route('/all')
@@ -46,7 +46,7 @@ def set_password(token):
 @admin_required
 def user_list():
     users = User.query.all()
-    return render_template('users/user_list.html', users=users)
+    return render_template('users/user_list.html', title='Users', users=users)
 
 
 @bp.route('/<int:user_id>/edit', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def user_edit(user_id):
     elif request.method == 'GET':
         form.name.data = user.name
         form.email.data = user.email
-    return render_template('users/user_edit.html', form=form)
+    return render_template('form.html', title='Edit user', form=form)
 
 
 @bp.route('/<int:user_id>/delete', methods=['GET', 'POST'])
