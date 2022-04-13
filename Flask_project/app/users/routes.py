@@ -6,6 +6,7 @@ from app.models import User
 from app.users.email import send_registration_email
 from app import db
 from app.decorators import admin_required, no_authentication_required
+from secrets import token_urlsafe
 
 
 @bp.route('/register_user', methods=['GET', 'POST'])
@@ -18,6 +19,7 @@ def register_user():
         if user is None:
             user = User(name=form.name.data,
                         email=form.email.data)
+            user.set_password(token_urlsafe(8))
             db.session.add(user)
             db.session.commit()
             send_registration_email(user)

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, TextAreaField, DateField, TimeField, FieldList, FormField, SelectField, Form
+from wtforms import StringField, IntegerField, SubmitField, TextAreaField,\
+    DateField, TimeField, FieldList, FormField, SelectField, Form
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.validators import DataRequired, length, NumberRange, ValidationError
 from wtforms.widgets import DateInput, TimeInput
@@ -17,7 +18,9 @@ class QuestionForm(FlaskForm):
 class QuestionSetForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), length(max=50)])
     area = StringField('Area', validators=[DataRequired(), length(max=100)])
-    level = StringField('Level', validators=[DataRequired(), length(max=50)])
+    level = SelectField('Level',
+                        choices=['junior', 'middle', 'senior'],
+                        validators=[DataRequired()])
     questions = QuerySelectMultipleField('Questions',
                                          get_label='question',
                                          allow_blank=False,
