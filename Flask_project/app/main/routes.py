@@ -17,8 +17,15 @@ def index():
 @login_required
 @admin_or_expert_required
 def question_list():
-    questions = Question.query.all()
-    return render_template('main/question_list.html', title='Questions', questions=questions)
+    page = request.args.get('page', 1, type=int)
+    questions = Question.query.paginate(page, 8, False)
+    next_url = url_for('main.question_list', page=questions.next_num) if questions.has_next else None
+    prev_url = url_for('main.question_list', page=questions.prev_num) if questions.has_prev else None
+    return render_template('main/question_list.html',
+                           title='Questions',
+                           questions=questions.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @bp.route('/questions/add', methods=['GET', 'POST'])
@@ -70,8 +77,15 @@ def question_delete(question_id):
 @login_required
 @admin_or_expert_required
 def set_list():
-    sets = Set.query.all()
-    return render_template('main/set_list.html', title='Question sets', sets=sets)
+    page = request.args.get('page', 1, type=int)
+    sets = Set.query.paginate(page, 4, False)
+    next_url = url_for('main.set_list', page=sets.next_num) if sets.has_next else None
+    prev_url = url_for('main.set_list', page=sets.prev_num) if sets.has_prev else None
+    return render_template('main/set_list.html',
+                           title='Question sets',
+                           sets=sets.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @bp.route('/set/add', methods=['GET', 'POST'])
@@ -125,16 +139,34 @@ def set_delete(set_id):
 @login_required
 @admin_or_recruiter_required
 def interview_list():
-    interviews = Interview.query.filter(Interview.date >= date.today()).order_by('date')
-    return render_template('main/interview_list.html', title='Interviews', interviews=interviews)
+    page = request.args.get('page', 1, type=int)
+    interviews = Interview.query.filter(
+        Interview.date >= date.today()
+    ).order_by('date').paginate(page, 8, False)
+    next_url = url_for('main.interview_list', page=interviews.next_num) if interviews.has_next else None
+    prev_url = url_for('main.interview_list', page=interviews.prev_num) if interviews.has_prev else None
+    return render_template('main/interview_list.html',
+                           title='Interviews',
+                           interviews=interviews.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @bp.route('/interviews/archive')
 @login_required
 @admin_or_recruiter_required
 def interview_list_archive():
-    interviews = Interview.query.filter(Interview.date < date.today()).order_by('date')
-    return render_template('main/interview_list_archive.html', title='Archive', interviews=interviews)
+    page = request.args.get('page', 1, type=int)
+    interviews = Interview.query.filter(
+        Interview.date < date.today()
+    ).order_by('date').paginate(page, 8, False)
+    next_url = url_for('main.interview_list_archive', page=interviews.next_num) if interviews.has_next else None
+    prev_url = url_for('main.interview_list_archive', page=interviews.prev_num) if interviews.has_prev else None
+    return render_template('main/interview_list_archive.html',
+                           title='Archive',
+                           interviews=interviews.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @bp.route('/interview/add', methods=['GET', 'POST'])
@@ -226,11 +258,18 @@ def interview_question(interview_id):
 @login_required
 @expert_required
 def activities():
+    page = request.args.get('page', 1, type=int)
     interviews = Interview.query.filter(
         Interview.users.contains(current_user),
         Interview.date >= date.today()
-    ).order_by('date')
-    return render_template('main/activities.html', title='Activities', interviews=interviews)
+    ).order_by('date').paginate(page, 8, False)
+    next_url = url_for('main.activities', page=interviews.next_num) if interviews.has_next else None
+    prev_url = url_for('main.activities', page=interviews.prev_num) if interviews.has_prev else None
+    return render_template('main/activities.html',
+                           title='Activities',
+                           interviews=interviews.items,
+                           next_url=next_url,
+                           prev_url=prev_url)
 
 
 @bp.route('/interview/<int:interview_id>/', methods=['GET', 'POST'])

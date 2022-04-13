@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import EmailField, PasswordField, SubmitField, StringField, BooleanField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, length
 from app.models import User
 
 
 class UserRegistrationForm(FlaskForm):
-    name = StringField('Full name', validators=[DataRequired()])
-    email = EmailField('Email address', validators=[DataRequired(), Email()])
+    name = StringField('Full name', validators=[DataRequired(), length(max=100)])
+    email = EmailField('Email address', validators=[DataRequired(), Email(), length(max=100)])
     is_admin = BooleanField('Admin')
     is_recruiter = BooleanField('Recruiter')
     submit = SubmitField('Send invitation')
@@ -24,8 +24,8 @@ class SetPasswordForm(FlaskForm):
 
 
 class UserEditForm(FlaskForm):
-    name = StringField('Full name', validators=[DataRequired()])
-    email = EmailField('Email', validators=[DataRequired(), Email()])
+    name = StringField('Full name', validators=[DataRequired(), length(max=100)])
+    email = EmailField('Email', validators=[DataRequired(), Email(), length(max=100)])
     submit = SubmitField('Confirm')
 
     def __init__(self, original_email, *args, **kwargs):

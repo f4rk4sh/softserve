@@ -9,7 +9,7 @@
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </th>
-                <th scope="col"></th>
+                {% include 'pagination.html' %}
                 <th scope="col">Interviewee</th>
                 <th scope="col">Brief info</th>
                 <th scope="col">Date</th>
@@ -26,7 +26,7 @@
                         <span class="glyphicon glyphicon-trash" onclick="return confirm('Are you sure you want to delete this interview?')"></span>
                     </a>
                 </td>
-                <td>
+                <td class="text-center">
                     <a href="{{ url_for('main.interview_edit', interview_id=interview.id )}}">
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>

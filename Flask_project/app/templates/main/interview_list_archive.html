@@ -4,7 +4,7 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"></th>
+                {% include 'pagination.html' %}
                 <th scope="col">Interviewee</th>
                 <th scope="col">Brief info</th>
                 <th scope="col">Date</th>
@@ -16,7 +16,7 @@
         <tbody>
         {% for interview in interviews %}
             <tr>
-                <td>
+                <td class="text-center">
                     <a href="{{ url_for('main.interview_delete', interview_id=interview.id ) }}">
                         <span class="glyphicon glyphicon-trash" onclick="return confirm('Are you sure you want to delete this interview?')"></span>
                     </a>

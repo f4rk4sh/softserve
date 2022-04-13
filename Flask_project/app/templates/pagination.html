@@ -1,0 +1,8 @@
+<th scope="col" class="col-md-1 text-center">
+    {% if prev_url %}
+        <a href="{{ prev_url }}"><span class="glyphicon glyphicon-menu-left"></span></a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}"><span class="glyphicon glyphicon-menu-right"></span></a>
+    {% endif %}
+</th>

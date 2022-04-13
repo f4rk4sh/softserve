@@ -4,7 +4,7 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col"></th>
+                {% include 'pagination.html' %}
                 <th scope="col">Interviewee</th>
                 <th scope="col">Date</th>
                 <th scope="col">Time</th>
@@ -15,7 +15,7 @@
         <tbody>
         {% for interview in interviews %}
             <tr>
-                <td>
+                <td class="text-center">
                     <a href="{{ url_for('main.interview_detail', interview_id=interview.id) }}">
                             <span class="glyphicon glyphicon-new-window"></span>
                     </a>

@@ -9,7 +9,7 @@
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </th>
-                <th scope="col"></th>
+                {% include 'pagination.html' %}
                 <th scope="col">Name</th>
                 <th scope="col" class="text-center">Admin</th>
                 <th scope="col" class="text-center">Recruiter</th>
@@ -24,7 +24,7 @@
                         <span class="glyphicon glyphicon-trash" onclick="return confirm('Are you sure you want to delete this user?')"></span>
                     </a>
                 </td>
-                <td>
+                <td class="text-center">
                     <a href="{{ url_for('users.user_edit', user_id=user.id) }}">
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>
