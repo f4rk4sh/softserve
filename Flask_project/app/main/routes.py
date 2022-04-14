@@ -18,7 +18,7 @@ def index():
 @admin_or_expert_required
 def question_list():
     page = request.args.get('page', 1, type=int)
-    questions = Question.query.paginate(page, 8, False)
+    questions = Question.query.order_by('area').paginate(page, 8, False)
     next_url = url_for('main.question_list', page=questions.next_num) if questions.has_next else None
     prev_url = url_for('main.question_list', page=questions.prev_num) if questions.has_prev else None
     return render_template('main/question_list.html',
@@ -78,7 +78,7 @@ def question_delete(question_id):
 @admin_or_expert_required
 def set_list():
     page = request.args.get('page', 1, type=int)
-    sets = Set.query.paginate(page, 4, False)
+    sets = Set.query.order_by('level').paginate(page, 4, False)
     next_url = url_for('main.set_list', page=sets.next_num) if sets.has_next else None
     prev_url = url_for('main.set_list', page=sets.prev_num) if sets.has_prev else None
     return render_template('main/set_list.html',
@@ -94,7 +94,7 @@ def set_list():
 def set_add():
     question_set = Set()
     form = QuestionSetForm()
-    form.questions.query = db.session.query(Question)
+    form.questions.query = db.session.query(Question).order_by('area', 'id')
     if form.validate_on_submit():
         form.populate_obj(question_set)
         db.session.add(question_set)
@@ -110,7 +110,7 @@ def set_add():
 def set_edit(set_id):
     question_set = Set.query.filter_by(id=set_id).first_or_404()
     form = QuestionSetForm()
-    form.questions.query = db.session.query(Question)
+    form.questions.query = db.session.query(Question).order_by('area', 'id')
     if form.validate_on_submit():
         form.populate_obj(question_set)
         db.session.commit()

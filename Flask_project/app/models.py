@@ -34,7 +34,10 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_recruiter = db.Column(db.Boolean, default=False)
     interviews = db.relationship('Interview', secondary=user_interview, back_populates='users')
-    grades = db.relationship('Grade', backref='evaluators', lazy='dynamic')
+    grades = db.relationship('Grade',
+                             backref='evaluators',
+                             cascade='save-update, merge, delete, delete-orphan',
+                             lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.id}>'
@@ -76,7 +79,10 @@ class Interview(db.Model):
     users = db.relationship('User', secondary=user_interview, back_populates='interviews')
     sets = db.relationship('Set', secondary=interview_set, back_populates='interviews')
     questions = db.relationship('Question', secondary=interview_question, back_populates='interviews')
-    grades = db.relationship('Grade', backref='interviews', lazy='dynamic')
+    grades = db.relationship('Grade',
+                             backref='interviews',
+                             cascade='save-update, merge, delete, delete-orphan',
+                             lazy='dynamic')
 
     def __repr__(self):
         return f'<Interview {self.id}>'
@@ -108,7 +114,10 @@ class Question(db.Model):
     max_grade = db.Column(db.Integer)
     interviews = db.relationship('Interview', secondary=interview_question, back_populates='questions')
     sets = db.relationship('Set', secondary=question_set, back_populates='questions')
-    grades = db.relationship('Grade', backref='questions', lazy='dynamic')
+    grades = db.relationship('Grade',
+                             backref='questions',
+                             cascade='save-update, merge, delete, delete-orphan',
+                             lazy='dynamic')
 
     def __repr__(self):
         return f'<Question {self.id}>'
